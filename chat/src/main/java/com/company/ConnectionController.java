@@ -5,19 +5,27 @@ import java.net.Socket;
 import java.util.List;
 
 /**
- * Created by John on 4/30/2017.
+ * connectionController is created for every connection,
+ * takes input from ControllerView and responds appropriately
+ *
  */
-public class ConnectionController {
+class ConnectionController {
     private Model myData;
-    private JsonObjectBuilder reqBuilder;
+    private JsonObjectBuilder reqBuilder_;
     private User myUser_;
-    Socket clientSocket_;
-    public ConnectionController(Model data, Socket clientSocket) {
+    private Socket clientSocket_;
+    ConnectionController(Model data, Socket clientSocket) {
         myData = data;
-        reqBuilder = Json.createObjectBuilder();
+        reqBuilder_ = Json.createObjectBuilder();
         clientSocket_ = clientSocket;
     }
-    public JsonObject parseMessage(JsonObject msg) {
+
+    /**
+     * function that parses protocol and calls appropriate function to handle requests
+     * @param msg input message
+     * @return output message
+     */
+    JsonObject parseMessage(JsonObject msg) {
         String action;
         action = msg.getString("action");
         System.out.println("PARSE MESSAGE " + action);
@@ -35,57 +43,55 @@ public class ConnectionController {
     }
     private JsonObject responseSendMessage(String message) {
         System.out.println("got message");
-        reqBuilder.add("action","OK");
+        reqBuilder_.add("action","OK");
         if(myUser_.hasRoom()) {
-            //myUser_.getUserRoom().BroadCastMessage(message, myUser_);
-            BroadCastTextMessage(myUser_.getUserRoom().GetAllUsers(),message);
+            BroadCastTextMessage(myUser_.getUserRoom().getAllUsers(),message);
         }
-        return reqBuilder.build();
+        return reqBuilder_.build();
     }
     private JsonObject responseJoinRoom(String roomName) {
-        reqBuilder.add("action","JoinRoom");
-        reqBuilder.add("roomName",roomName);
+        reqBuilder_.add("action","JoinRoom");
+        reqBuilder_.add("roomName",roomName);
         Room prevRoom = myUser_.getUserRoom();
         if(myData.JoinRoom(roomName,myUser_)) {
             if(prevRoom != null) {
                 System.out.println("Broadcast remove user");
-                BroadCastRemoveUser(prevRoom.GetAllUsers(), myUser_.getNickName());
+                BroadCastRemoveUser(prevRoom.getAllUsers(), myUser_.getNickName());
             }
-            BroadCastNewUser(myUser_.getUserRoom().GetAllUsers(),myUser_.getNickName());
-            reqBuilder.add("decision", "granted");
+            BroadCastNewUser(myUser_.getUserRoom().getAllUsers(),myUser_.getNickName());
+            reqBuilder_.add("decision", "granted");
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-            for(User i : myUser_.getUserRoom().GetAllUsers()) {
+            for(User i : myUser_.getUserRoom().getAllUsers()) {
                 arrayBuilder.add(i.getNickName());
             }
-            reqBuilder.add("users",arrayBuilder);
+            reqBuilder_.add("users",arrayBuilder);
         }
         else
-            reqBuilder.add("decision","rejected");
-        return reqBuilder.build();
+            reqBuilder_.add("decision","rejected");
+        return reqBuilder_.build();
     }
     private JsonObject responseUserName(String nickname) {
-        reqBuilder.add("action","SendNick");
+        reqBuilder_.add("action","SendNick");
         User tmpUser;
         if((tmpUser = myData.AddUser(nickname) )!= null) {
             myUser_ = tmpUser;
             myUser_.setUserSocket(clientSocket_);
-            reqBuilder.add("decision","granted");
+            reqBuilder_.add("decision","granted");
         }
         else {
-            reqBuilder.add("decision","occupied");
+            reqBuilder_.add("decision","occupied");
         }
-        return reqBuilder.build();
+        return reqBuilder_.build();
     }
 
     private JsonObject responseRoomList() {
-        reqBuilder.add("action","RequestRooms");
-        //reqBuilder.add("room","firstRoom");
+        reqBuilder_.add("action","RequestRooms");
         JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
         for(Room myRoom :myData.GetAllRooms()) {
             arrayBuilder.add(myRoom.getName());
         }
-        reqBuilder.add("rooms",arrayBuilder);
-        return reqBuilder.build();
+        reqBuilder_.add("rooms",arrayBuilder);
+        return reqBuilder_.build();
     }
 
     private void BroadCastNewUser(List<User> users,String message) {

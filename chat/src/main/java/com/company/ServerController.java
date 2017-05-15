@@ -2,9 +2,9 @@ package com.company;
 import java.net.*;
 import java.io.*;
 /**
- * Created by John on 4/28/2017.
+ * singleton, listens for connections and starts a thread for each succesful connection
  */
-public class ServerController {
+class ServerController {
     private static ServerController ourInstance = new ServerController();
 
     static ServerController getInstance() {
@@ -15,6 +15,11 @@ public class ServerController {
     private Model myData_ = new Model();
     private int port_;
 
+    /**
+     * this function starts server
+     * @param port port server will run on
+     * @return
+     */
     boolean startServer(int port) {
         port_ = port;
         try {

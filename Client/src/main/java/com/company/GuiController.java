@@ -10,16 +10,16 @@ public class GuiController {
     GuiController(Main mainWindow) {
         mainWindow_ = mainWindow;
     }
-    void EnableRooms() {
+    synchronized void EnableRooms() {
         mainWindow_.EnableRoomView();
     }
-    void DisableRooms() {
+    synchronized void DisableRooms() {
         mainWindow_.DisableRoomView();
     }
-    void UpdateRooms() {
+    synchronized void UpdateRooms() {
         mainWindow_.UpdateRooms();
     }
-    void UpdateUsers() {mainWindow_.UpdateUsers();}
-    void EnableDisconnect() {mainWindow_.EnableDisconnect();}
-    void DisableDisconnect() {mainWindow_.DisableDisconnect();}
+    synchronized void UpdateUsers() {mainWindow_.UpdateUsers();}
+    synchronized void EnableDisconnect() {mainWindow_.EnableDisconnect();}
+    synchronized void DisableDisconnect() {mainWindow_.DisableDisconnect();}
 }

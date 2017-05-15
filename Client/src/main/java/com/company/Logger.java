@@ -11,5 +11,8 @@ public class Logger {
     synchronized void AppendText(String myText) {
         mainWindow_.AppendText(myText + "\n");
     }
+    synchronized void AppendMessageText(String myText) {
+        mainWindow_.AppendMessageText(myText);
+    }
 
 }

@@ -2,8 +2,8 @@ package com.company;
 
 import java.io.*;
 
-/**Protocol:
- *
+/**
+ * Main class, it only starts a ServerController
  */
 
 

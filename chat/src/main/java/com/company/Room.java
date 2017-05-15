@@ -1,15 +1,11 @@
 package com.company;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
-import java.net.Socket;
 import java.util.*;
 /**
- * Created by John on 4/29/2017.
+ * object representing room,
+ * stores room name, and its users
  */
-public class Room {
-    private int id_;
-    private List<User> users = new LinkedList<User>();
+class Room {
+    private List<User> users_ = new LinkedList<>();
     private String name_;
     Room(String name) {
         name_ = name;
@@ -17,16 +13,27 @@ public class Room {
     String getName() {
         return name_;
     }
+
+    /**
+     * simply adds user to room
+     * @param user
+     * @return true if success, else false
+     */
     boolean addUser(User user) {
-        users.add(user);
+        users_.add(user);
         return true;
     }
 
+    /**
+     * simply removes user from room
+     * @param user
+     * @return true if success, else false
+     */
     boolean removeUser(User user) {
-        users.remove(user);
+        users_.remove(user);
         return true;
     }
-    List<User> GetAllUsers() {
-        return users;
+    List<User> getAllUsers() {
+        return users_;
     }
 }

@@ -1,11 +1,11 @@
 package com.company;
 import java.util.*;
 /**
- * Created by John on 4/29/2017.
+ * singleton used by Model to manage rooms
  */
-public class RoomManager {
+class RoomManager {
     private static RoomManager ourInstance = new RoomManager();
-    public static RoomManager getInstance() {
+    static RoomManager getInstance() {
         return ourInstance;
     }
     private RoomManager() {
@@ -13,17 +13,23 @@ public class RoomManager {
         rooms.add(new Room("Default_2"));
         rooms.add(new Room("Default_3"));
     }
-    private List<Room> rooms = new LinkedList<Room>();
+    private List<Room> rooms = new LinkedList<>();
 
-
-    public List<Room> GetRooms() {
+    /**
+     *
+     * @return returns all rooms on server
+     */
+    List<Room> GetRooms() {
         return rooms;
     }
-    public boolean AddRoom(Room tmp) {
-        return true;
-    }
 
-    public boolean JoinRoom(String roomName,User user) {
+    /**
+     * function called to join chosen room
+     * @param roomName
+     * @param user
+     * @return true if joining was successful, else false
+     */
+    boolean JoinRoom(String roomName,User user) {
         if(user.getUserRoom() != null) {
             user.getUserRoom().removeUser(user);
         }
@@ -36,9 +42,5 @@ public class RoomManager {
         }
         return false;
     }
-    /*public boolean RemoveRoom(Room tmp) {
-        return true;
-    }*/
-
 
 }

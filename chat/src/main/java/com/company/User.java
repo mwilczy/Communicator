@@ -3,28 +3,34 @@ package com.company;
 import java.net.Socket;
 
 /**
- * Created by John on 4/29/2017.
+ * represents user connected to the server,
+ * contains his name and also room he's assigned to
  */
-public class User {
+class User {
     private Socket userSocket_;
     private String nickName_;
     private Room myRoom = null;
-    public User() {
-        nickName_ = "anonymous";
-        userSocket_ = null;
-    }
+
     User(String nick) {
         nickName_ = nick;
     }
+
+    /**
+     * checks if user joined room
+     * @return true if user currently in room, else false
+     */
     boolean hasRoom() {
-        if(myRoom != null)
-            return true;
-        return false;
+        return (myRoom != null);
     }
+
+    /**
+     * removes user from room
+     */
     void removeFromRoom() {
         if(myRoom != null)
             myRoom.removeUser(this);
     }
+
 
     void setUserSocket(Socket userSocket) {
         userSocket_ = userSocket;
@@ -32,12 +38,15 @@ public class User {
     Socket getUserSocket() {
         return userSocket_;
     }
-    void setNickName(String nickName) {
-        nickName_ = nickName;
-    }
+
     String getNickName() {
         return nickName_;
     }
+
+    /**
+     * pair user with a room
+     * @param assignedRoom room to be paired with
+     */
     void AssignRoom(Room assignedRoom) {
         myRoom = assignedRoom;
     }

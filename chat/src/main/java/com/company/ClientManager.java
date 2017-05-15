@@ -1,28 +1,41 @@
 package com.company;
 import java.util.*;
 /**
- * Created by John on 4/29/2017.
+ * singleton used by Model to manage clients
  */
-public class ClientManager {
+class ClientManager {
+
+    private List<User> users_ = new LinkedList<User>();
 
     private static ClientManager ourInstance = new ClientManager();
     static ClientManager getInstance() {
         return ourInstance;
     }
     private ClientManager() {}
-    private List<User> users = new LinkedList<User>();
-    boolean AddUser(User tmp) {
-        for(User i : users) {
-            if(i.getNickName().equals(tmp.getNickName()))
+
+    /**
+     * tries to add a new user
+     * @param user user to add
+     * @return if succesful returns true , else if nick is already taken returns false
+     */
+    boolean AddUser(User user) {
+        for(User i : users_) {
+            if(i.getNickName().equals(user.getNickName()))
                 return false;
         }
-        users.add(tmp);
+        users_.add(user);
         return true;
     }
-    boolean RemoveUser(User tmp) {
-        if(users.contains(tmp)) {
-            tmp.removeFromRoom();
-            users.remove(tmp);
+
+    /**
+     * tries to remove user
+     * @param user user to remove
+     * @return if succesful returns true , else user doesn't exist returns false
+     */
+    boolean RemoveUser(User user) {
+        if(users_.contains(user)) {
+            user.removeFromRoom();
+            users_.remove(user);
             return true;
         }
         return false;

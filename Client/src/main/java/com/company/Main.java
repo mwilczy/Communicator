@@ -6,12 +6,14 @@ import javafx.scene.control.*;
 import javafx.scene.Scene;
 import javafx.scene.text.Text;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.HTMLEditor;
 import javafx.stage.*;
 import javafx.scene.input.MouseEvent;
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonWriter;
-import java.net.Socket;
+import org.fxmisc.richtext.*;
+
+import java.util.LinkedList;
+import java.util.List;
+
 
 public class Main extends Application {
 
@@ -47,8 +49,18 @@ public class Main extends Application {
         chat_input = new TextField();
         chat_input.setOnAction(this::HandleSendMessage);
 
-        chat_output.setText("Welcome to chat application ...\n");
         chat_output.setEditable(false);
+
+        chat_output.getStyleClass().clear();
+        chat_output.getStyleClass().add("-fx-font-weight: bold;");
+
+        //chat_output.getStyleClass().removeAll();
+        //System.out.println(chat_output.getStyleClass().toString());
+       // ReadOnlyStyledDocument mydoc = ReadOnlyStyledDocument.fromString("aww",chat_output.getStyleClass());
+
+        //chat_output.append(mydoc);
+        chat_output.appendText("Welcome to chat application ...\n");
+        //chat_output.setEditable(false);
         BorderPane root = new BorderPane();
 
         MenuBar menuBar = new MenuBar();
@@ -81,7 +93,9 @@ public class Main extends Application {
     synchronized void AppendText(String myText) {
         chat_output.appendText(myText);
     }
-
+    synchronized void AppendMessageText(String myText) {
+       // chat_output.
+    }
     private void HandleSendMessage(ActionEvent event) {
         System.out.println(chat_input.getText());
         String txt = chat_input.getText();
@@ -103,6 +117,15 @@ public class Main extends Application {
     private void HandleConnectClick(ActionEvent event) {
         if(ConnectForm.Show(data)) {
             System.out.println("OK");
+            if(data.getSocket() != null) {
+                try {
+                    data.getSocket().close();
+                    data.setSocket(null);
+                }
+                catch(Exception e) {
+
+                }
+            }
             (new ConnectionHandler(data,myLoger,myGuiController)).start();
         }
     }
